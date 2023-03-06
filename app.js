@@ -1,12 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
+
+const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/sauce');
 
 mongoose
   .connect('mongodb+srv://sarahtoukour:piquante@cluster0.m2psanr.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
-
-const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;
