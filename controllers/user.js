@@ -33,7 +33,7 @@ exports.login = (req, res, next) => {
               res.status(401).json({ message: 'Paire identifiant/mot de passe incorrecte' });
             } else {
               res.status(200).json({
-                iserId: user._id,
+                userId: user._id,
                 token: jwt.sign({ userId: user._id }, 'RANDOM_TOKEN_SECRET', { expiresIn: '24h' }),
               });
             }
