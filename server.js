@@ -1,14 +1,7 @@
-// const http = require('http');
-// const app = require('./app');
-
-// const server = http.createServer((req, res) => {
-//   res.end('Voilà la réponse du serveur !');
-// });
-
-// server.listen(process.env.PORT || 3000);
-
 const http = require('http');
 const app = require('./app');
+// const dotenv = require('dotenv');
+// dotenv.config();
 
 const normalizePort = (val) => {
   const port = parseInt(val, 10);
