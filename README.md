@@ -1,13 +1,13 @@
-# PROJET 6 - Construisez une API sécurisée pour une application d'avis gastronomiques
+# OC PROJET 6 - Construisez une API sécurisée pour une application d'avis gastronomiques
 
-## Instalation
+## Installation
 
 ### Back end
 
 - Cloner le projet :
 
 ```text
-git clone https://github.com/sismitrii/OC_P6_Hot_Takes.git backend
+git clone https://github.com/sarahtoukour/Piiquante-OC
 ```
 
 - Installer les dépendances du projet :
@@ -18,32 +18,17 @@ git clone https://github.com/sismitrii/OC_P6_Hot_Takes.git backend
 
 #### Connection à la base de donnée
 
-L'API fonctionne avec une base de donnée MongoDB. Un compte MongoDB est donc requis. Si vous ne disposez pas de compte vous pouvez vous inscrire gratuitement à cette [https://www.mongodb.com/atlas/database](adresse).
+L'API fonctionne avec une base de donnée MongoDB. Crééz un cluster avec les privilèges de lecture et d'écriture.
+Les données concernant la connection à la BDD MongoDB sont présentes dans des variables d'environnement dont vous trouverez la liste dans le fichier .env.test (il vous suffit d'ajouter les votres et de renommer le fichier en ".env" pour faire fonctionner le programme)
 
-- Créer un nouveau projet
-- Built a database
-  - Choisir Shared Free
-  - Vous pouvez changer le ClusterName
-  - Create Cluster
-  - Définir un username et password
-  - Add My current IP Address
-  - Save
-  - Sur l'onglet Database cliquer sur Connect > Connect your application
-  - copier le lien commençant par "mongodb+srv://..."
+#### Dossier images
 
-Dans le dossier backend vous trouver un fichier `.env.sample``
-
-- Duppliquer ce fichier
-- Renommer le fichier `.env``
-- Ouvrir le fichier et remplir :
-
-  - MONGODB_CONNECT avec le lien copié
-  - JWT_PASSWORD avec le mot de passe que vous voulez
+Il faut créér un dossier images à la racine du backend pour l'enregistrement des images ajoutées par les utilisateurs
 
 - Executez :
 
 ```text
-npm start
+nodemon server
 ```
 
 ### Front-end
@@ -51,10 +36,10 @@ npm start
 - Cloner le projet dans le même fichier que le back-end
 
 ```text
-git clone https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6.git frontend
+git clone https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6
 ```
 
-- Installer les dépendences :
+- Installer les dépendances :
 
 ```text
 npm install
@@ -63,5 +48,5 @@ npm install
 - Executez :
 
 ```text
-ng serve
+npm run start
 ```
