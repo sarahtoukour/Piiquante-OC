@@ -1,10 +1,13 @@
+// Importation des modules nécessaires pour la création de l'utilisateur et la gestion de l'authentification
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+// Fonction pour créer un nouvel utilisateur dans la base de données
 exports.signup = (req, res, next) => {
   bcrypt
-    .hash(req.body.password, 10) //10(nbre de salt, nbre de tour d'algorithme qui hache, attention plus le nbre est grand plus c'est long à s'exécuter)
+    // on utilise la fonction hash de bcrypt pour chiffrer le mot de passe
+    .hash(req.body.password, 10)
     .then((hash) => {
       //=> on récup le hach du mot de passe
       const user = new User({
