@@ -4,47 +4,56 @@ const jwt = require('jsonwebtoken');
 
 exports.signup = (req, res, next) => {
   bcrypt
-    .hash(req.body.password, 10)
+    .hash(req.body.password, 10) //10(nbre de salt, nbre de tour d'algorithme qui hache, attention plus le nbre est grand plus c'est long à s'exécuter)
     .then((hash) => {
+      //=> on récup le hach du mot de passe
       const user = new User({
-        email: req.body.email,
-        password: hash,
+        //=> on va l'enregistrer dans un nouveau "user" que l'on va enregistrer ds la BD
+        email: req.body.email, //=> adresse fourni ds le corps de la requête
+        password: hash, //=> on enregistre le cryptage pr ne pas stocker le mot de pass
       });
       user
-        .save()
-        .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
-        .catch((error) => res.status(400).json({ message: 'Un compte utilise déjà cette adresse mail' }));
+        .save() //=> enregistrement ds la BD :
+        .then(() => res.status(201).json({ message: 'Utilisateur créé !' })) //renvoie d'un 201 pr une création de ressources réussit / avec un renvoie d'un message
+        .catch((error) => res.status(400).json({ error })); //erreur 400 pr la différencier de la suivante
     })
-    .catch((error) => res.status(500).json({ error }));
+    .catch((error) => res.status(500).json({ error })); //on capte l'erreur et on renvoie une erreur server ds un objet
 };
 
+//Fonction pour connecter un utilisateur existant (utilisateur enregistré) :
+//promise retournée par "findOne" dc => ".then" & ".catch"
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email }) //on recherche l' seul utilisateur de la bdd (celui dont l'email correspond à l'email envoyé dans la requête)
+  User.findOne({
+    email: req.body.email, //sert de filtre, de sélecteur avec la valeur transmise par l'utilisateur
+  })
     .then((user) => {
-      // on doit vérifier si on a récupéré un user ou non
-      if (!user) {
-        // si non :
-        return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+      //=> récup l'enregistrement du user ds la BD et vérif si l'utilisateur est bien trouvé et si son mot de pass est le bon
+      if (user === null) {
+        //=> si l'utilisateur n'existe pas :
+        res.status(401).json({ message: 'Paire identifiant et mot de passe incorrecte' }); //message flou pr ne pas divulguer une qqconq info => cela serait une fuite de données
+      } else {
+        // si l'utilisateur est enregistré ds la BD / comparaison du mot de pass de la BD avec celui qui vient d'être transmit
+        bcrypt
+          .compare(req.body.password, user.password) //méthode "compare" de bcrypt(on récup ce qui est transmit et on compare avec celui de la BD)
+          .then((valid) => {
+            if (!valid) {
+              res
+                .status(401) //erreur d'authentification
+                .json({ message: 'Identifiant/mot de passe incorrect' });
+            }
+            //=> sinon si correct
+            res.status(200).json({
+              userId: user._id, // => objet qui contient les infos nécessaire à l'authentification des requêtes émises par le user :
+              token: jwt.sign(
+                //appel de la fonction "sign" qui prend en arguments :
+                { userId: user._id }, //user identifié par son id / => données que l'on veut encoder à l'intérieur du token(payload)
+                'RANDOM_TOKEN_SECRET', //[RANDOM_SECRET_KEY] ici la clé secrète pr l'encodage(qui reste assez simple, il faut utiliser une chaine de caractères aléatoire et bcp plus longue pr sécuriser l'encodage)
+                { expiresIn: '24h' } //argument de configuration où on applique une durée de validité du token avant expiration/l'utilisateur devra donc se reconnecter au bout de 24h
+              ),
+            });
+          })
+          .catch((error) => res.status(500).json({ error })); // erreur de traitement
       }
-      bcrypt
-        .compare(req.body.password, user.password) // si oui, on utilise la méthode compare de bcrypt pour comparer le mdp envoyé et le hash de la bdd
-        .then((valid) => {
-          // on recoit un boolean
-          if (!valid) {
-            return res.status(401).json({ error: 'Mot de passe incorrect !' });
-          }
-          res.status(200).json({
-            // si c'est "valid" = true, on renvoi un objet json
-            userId: user._id, // avec l'identifiant
-            token: jwt.sign(
-              // et avec un token (grâce à l'appel de la fonction sign de jwt) qui servira pour les requêtes suivantes
-              { userId: user._id }, //arg 1 = le payload (les données qu'on veut encoder dans le token)=l'id du user
-              'RANDOM_TOKEN_SECRET', // clé secrète
-              { expiresIn: '24h' } //durée de vie
-            ),
-          });
-        })
-        .catch((error) => res.status(500).json({ error }));
     })
-    .catch((error) => res.status(500).json({ error })); //pour afficher un problème de connexion à mondoDb
+    .catch((error) => res.status(500).json({ error })); //=> erreur d'exécution de requête ds la BD
 };
