@@ -18,7 +18,7 @@ const cors = require('cors');
 // package node qui sécurise les appli Express en définissant divers en-têtes HTTP
 const helmet = require('helmet');
 
-// mongoose fait le lien entre la BD et notre server Node.js pour récupérer les données à afficher sur le front
+// mongoose fait le lien entre la BDD et notre server Node.js pour récupérer les données à afficher sur le front
 const mongoose = require('mongoose');
 
 // import des routes
@@ -42,8 +42,20 @@ app.use((req, res, next) => {
   next();
 });
 
-/* HELMET */
-app.use(helmet());
+// configure l'utilisation du middleware Helmet pour la sécurité de l'application en définissant une politique de sécurité des contenus pour éviter les attaques telles que les injections de code malveillant.
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'"],
+        fontSrc: ["'self'", 'fonts.gstatic.com'],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:'],
+      },
+    },
+  })
+);
 
 /* CORS */
 app.use(cors({ origin: 'http://localhost:4200' }));
