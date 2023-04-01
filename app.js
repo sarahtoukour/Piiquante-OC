@@ -44,15 +44,10 @@ app.use((req, res, next) => {
 
 // configure l'utilisation du middleware Helmet pour la sécurité de l'application en définissant une politique de sécurité des contenus pour éviter les attaques telles que les injections de code malveillant.
 app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'"],
-        fontSrc: ["'self'", 'fonts.gstatic.com'],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:'],
-      },
+  helmet.contentSecurityPolicy({
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      'img-src': ["'self'", '*'],
     },
   })
 );

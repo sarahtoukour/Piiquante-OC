@@ -22,10 +22,6 @@ L'API fonctionne avec une base de donnée MongoDB. Il faudra donc créer un clus
 Les données concernant la connection sont présentes dans des variables d'environnement dont vous trouverez la liste dans le fichier .env.test
 Ajoutez vos données de connexion et renommer le fichier en ".env"
 
-#### Dossier images
-
-Il faut créér un dossier images à la racine du backend pour l'enregistrement des images ajoutées par les utilisateurs
-
 - Exécutez :
 
 ```text
