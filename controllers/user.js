@@ -6,9 +6,12 @@ const jwt = require('jsonwebtoken');
 // Fonction pour créer un nouvel utilisateur dans la base de données
 exports.signup = (req, res, next) => {
   bcrypt
-    // Hasher le mot de passe à l'aide de la fonction hash de bcrypt
-    // 10 = détermine la force du hachage
-    .hash(req.body.password, 10)
+    // Générer un salt à l'aide de la fonction genSalt de bcrypt
+    .genSalt(10)
+    .then((salt) => {
+      // Hasher le mot de passe avec le salt généré à l'aide de la fonction hash de bcrypt
+      return bcrypt.hash(req.body.password, salt);
+    })
     .then((hash) => {
       // Créer un nouvel utilisateur avec l'adresse email et le mot de passe hashé
       const user = new User({
