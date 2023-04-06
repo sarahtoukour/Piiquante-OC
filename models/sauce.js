@@ -10,8 +10,8 @@ const sauceSchema = mongoose.Schema({
   imageUrl: { type: String, required: true }, // URL de l'image de la sauce
   heat: { type: Number, required: true }, // Niveau de piquant de la sauce (de 1 à 10)
 
-  likes: { type: Number, defaut: 0 }, // Nombre de likes de la sauce
-  dislikes: { type: Number, defaut: 0 }, // Nombre de dislikes de la sauce
+  likes: { type: Number, default: 0 }, // Nombre de likes de la sauce
+  dislikes: { type: Number, default: 0 }, // Nombre de dislikes de la sauce
   usersLiked: { type: [String], default: [] }, // Liste des identifiants des utilisateurs ayant liké la sauce
   usersDisliked: { type: [String], default: [] }, // Liste des identifiants des utilisateurs ayant disliké la sauce
 });

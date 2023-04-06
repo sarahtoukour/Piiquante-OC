@@ -1,7 +1,7 @@
 // importation du model sauce
 const Sauce = require('../models/sauce');
 
-// récupération du package fs de node.js qui permets d'effectuer des opérations sur le systeme de fichiers
+// récupération du package fs de node.js qui permet d'effectuer des opérations sur le systeme de fichiers
 const fs = require('fs');
 
 /* ### LOGIQUE MÉTIER ### */
@@ -123,12 +123,16 @@ exports.postLike = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
       .then((sauce) => {
         // Si l'utilisateur a déjà liké la sauce, retirer le like et décrémenter le compteur de likes
+        // includes = méthode qui vérifie si un élément est présent dans un tableau
         if (sauce.usersLiked.includes(req.body.userId)) {
           Sauce.updateOne(
             { _id: req.params.id },
             {
+              // supprime l'identifiant d'utilisateur de la liste 'userLiked' dans la sauce
               $pull: { usersLiked: req.body.userId },
+              // opérateur qui incrémente ou décrémente
               $inc: { likes: -1 },
+              // L'ID de la sauce est spécifié pour éviter toute modification involontaire de l'ID
               _id: req.params.id,
             }
           )

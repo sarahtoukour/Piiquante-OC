@@ -1,4 +1,4 @@
-// importer le module mongoose pour utiliser l'ORM
+// importer le module mongoose pour interagir avec la BDD MongoDB
 const mongoose = require('mongoose');
 
 // importer le module unique-validator pour ajouter une validation unique à l'email

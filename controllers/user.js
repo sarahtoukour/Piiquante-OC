@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 exports.signup = (req, res, next) => {
   bcrypt
     // Hasher le mot de passe à l'aide de la fonction hash de bcrypt
+    // 10 = détermine la force du hachage
     .hash(req.body.password, 10)
     .then((hash) => {
       // Créer un nouvel utilisateur avec l'adresse email et le mot de passe hashé
